@@ -1,0 +1,104 @@
+<LoginScreen>:
+    MDBoxLayout:        
+        md_bg_color: self.theme_cls.secondaryContainerColor
+                
+
+    MDCard:    
+        style: "elevated"
+        orientation: 'vertical'
+        pos_hint: {"center_x": .5, "center_y": .5}  
+        size_hint_max: "300dp", "300dp"
+        radius: [20, 20, 20, 20]   
+        padding: 50,0
+        # canvas.after:
+        #     Color: 
+        #         rgba: (1,0,1,0.3)
+        #     Rectangle:
+        #         size: self.size
+        #         pos: self.pos
+
+        MDBoxLayout: # Header
+            # height: 40
+            adaptive_height: True
+            # size_hint_y: 0.25
+            # md_bg_color: (1,0,0,0.5)
+            
+            MDLabel:
+                # md_bg_color: (1,1,0,0.5)
+                # adaptive_height: True
+                # height: "20dp"
+                text: "Iniciar sesión"
+                theme_text_color: 'Custom'
+                bold: True
+                halign: 'center' 
+        
+        MDBoxLayout: # Inputs
+            orientation: 'vertical'
+            # spacing: 50
+            # padding: 0,50
+
+            # adaptive_height: True
+            # md_bg_color: (0,1,0,0.5)
+
+            AnchorLayout:
+                MDTextField:
+                    id: input_email
+                    pos_hint: {"top":0}
+                    required: True
+                    write_tab: False
+                    on_focus: app.check_complete()
+                    
+                    MDTextFieldLeadingIcon:
+                        icon: "email"                            
+                    
+                    MDTextFieldHintText:
+                        text: "Correo electrónico"
+                        
+            AnchorLayout:
+                MDTextField:
+                    required: True
+                    id: input_password
+                    pos_hint: {"bottom":0}
+                    password: True
+                    write_tab: False
+                    on_focus: app.check_complete()    
+
+                    MDTextFieldLeadingIcon:
+                        icon: "lock"   
+
+                    MDTextFieldHintText:
+                        text: "Contraseña"  
+
+
+        MDBoxLayout: # Buttons
+            orientation: 'horizontal'
+            spacing: 35  
+            adaptive_height: True   
+            # size_hint_y: 0.5
+            # md_bg_color: (0,0,1,0.5)
+
+            AnchorLayout:
+                MDButton:
+                    id: button_enter
+                    disabled: True
+                    validator: 'email'
+                    on_press: 
+                        # root.show_load()
+                        root.login()
+                        # root.manager.current = 'principal'                
+                        # root.manager.transition.direction = "left"
+                    
+                    MDButtonText:
+                        text: "Iniciar sesión"
+                        text_color: "red"                    
+            AnchorLayout:
+                MDButton: 
+                    on_press: 
+                        root.manager.current = 'register'                
+                        root.manager.transition.direction = "left"   
+                    
+                    MDButtonText:
+                        text: "Registrarse"
+                        text_color: "red"
+
+                

@@ -1,0 +1,105 @@
+#:import search re.search
+
+<CrearScreen>:
+            
+    MDBoxLayout:        
+        md_bg_color: self.theme_cls.backgroundColor
+
+
+    MDBoxLayout:
+        orientation: 'vertical'
+        md_bg_color: self.theme_cls.secondaryContainerColor
+
+        MDTopAppBar:
+            type: "small"   
+            size_hint_x: 1
+
+            MDTopAppBarLeadingButtonContainer:
+
+                MDActionTopAppBarButton:
+                    icon: "menu"
+
+            MDTopAppBarTitle:
+                text: "Crear encuesta"
+                
+
+        # MDScrollView:        
+        #     # orientation: 'vertical'
+        #     # size_hint_y: None      
+        #     # pos_hint: {"top": .7}  
+        #     # spacing: dp(30)
+        #     # padding: 70 
+        MDBoxLayout:
+            orientation: 'vertical'
+            # spacing: 30
+            padding: 70
+            # md_bg_color: (1,0,0,0.5)
+
+            MDBoxLayout:
+                # md_bg_color: (1,0,0,0.5)
+                MDTextField:
+                    id: input_form_id
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}            
+                    required: True
+                    size_hint_min_x: 290
+                    on_focus: 
+                        app.check_complete()
+                    on_text:
+                        self.error = search(r"/d/([a-zA-Z0-9_-]+)", self.text) is None
+
+                    MDTextFieldHintText:
+                        text: "Ingrese url del formulario"
+
+            MDBoxLayout:
+                # md_bg_color: (0,0,1,0.5)
+                MDTextField:
+                    id: input_form_password
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}            
+                    size_hint_min_x: 290
+                    on_text: app.check_complete()
+                    # password: True          
+
+                    MDTextFieldHintText:
+                        text: "Contraseña de descarga" 
+                    MDTextFieldHelperText:
+                        text: "(Opcional)"
+                        mode: 'persistent'
+                    MDTextFieldMaxLengthText:
+                        max_text_length:  6
+        
+            
+            MDBoxLayout:  
+                orientation: 'horizontal'
+                # md_bg_color: (0,0,1,0.5)      
+                MDAnchorLayout:
+                    
+                    # size_hint_x: 1
+                    # width: self.parent.width
+                    # pos_hint: {"center_y":0.5}
+                    # md_bg_color: (0,0,1)
+                    MDButton:
+                        id: button_enter
+                        disabled: True
+                        on_press:
+                            root.form_link = input_form_id.text
+                            root.form_password = input_form_password.text
+                            root.show_dialog()                                
+
+                        MDButtonIcon:
+                            icon: "plus"
+                        
+                        MDButtonText:                
+                            text: "Crear"  
+
+                MDAnchorLayout:
+                    MDButton:
+                        on_press: 
+                            root.manager.current = 'principal'                
+                            root.manager.transition.direction = "right"   
+
+                        MDButtonIcon:
+                            icon: "keyboard-return"
+                        
+                        MDButtonText:                
+                            text: "Regresar"                    
+

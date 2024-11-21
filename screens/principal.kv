@@ -1,0 +1,98 @@
+<PrincipalScreen>:
+    on_pre_leave: 
+        self.manager.current = 'login' if not app.user else self.manager.current
+    on_pre_enter: 
+        self.manager.current = 'principal' if app.user else 'login'
+    MDBoxLayout:        
+        md_bg_color: self.theme_cls.backgroundColor
+
+    
+    MDBoxLayout:
+        orientation: 'vertical'
+        md_bg_color: self.theme_cls.secondaryContainerColor
+
+        MDTopAppBar:
+            type: "small"   
+            size_hint_x: 1
+
+            MDTopAppBarLeadingButtonContainer:
+
+                MDActionTopAppBarButton:
+                    id: button_enter
+                    icon: "menu"
+
+            MDTopAppBarTitle:
+                text: "Inicio"
+        MDScrollView:
+
+            MDList:
+                
+                MDListItem:   
+                    on_press:                 
+                        root.manager.current = 'crear' 
+                        root.manager.transition.direction = "left"
+
+                    MDListItemLeadingIcon:
+                        icon: "pencil-outline"                
+                    
+                    MDListItemHeadlineText:
+                        text: "Crear encuestas"
+                        
+                    MDListItemSupportingText:
+                        text: "Ingrese aqui para crear una nueva encuesta"
+
+
+                MDListItem:            
+                    on_release: 
+                        root.manager.current = "descargar" 
+                        root.manager.transition.direction = "left"
+                    
+                    MDListItemLeadingIcon:
+                        icon: "download"                
+
+                    MDListItemHeadlineText:
+                        text: "Descargar encuesta"
+                        
+                    MDListItemSupportingText:
+                        text: "Ingrese aqui para descargar una encuesta y poder aplicarla sin necesidad de internet"
+
+                MDListItem:            
+                    on_release: 
+                        root.manager.current = "aplicar" 
+                        root.manager.transition.direction = "left"
+                    
+                    MDListItemLeadingIcon:
+                        icon: "account"               
+
+                    MDListItemHeadlineText:
+                        text: "Aplicar nueva encuesta"
+                        
+                    MDListItemSupportingText:
+                        text: "Ingrese aqui para aplicar una encuesta previamente descargada"
+
+                MDListItem:            
+                    on_release: 
+                        root.manager.current = "generar" 
+                        root.manager.transition.direction = "left"
+                    
+                    MDListItemLeadingIcon:
+                        icon: "folder"            
+
+                    MDListItemHeadlineText:
+                        text: "Generar reportes"
+                        
+                    MDListItemSupportingText:
+                        text: "Ingrese aqui para generar los reportes de las encuestas aplicadas"
+
+                MDListItem:            
+                    on_release: 
+                        app.user = {}
+                    
+                    MDListItemLeadingIcon:
+                        icon: "logout"          
+
+                    MDListItemHeadlineText:
+                        text: "Cerrar sesión"
+                        
+                    MDListItemSupportingText:
+                        text: "Ingrese aqui para cerrar la sesión de su cuenta"
