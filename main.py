@@ -24,8 +24,8 @@ class EncuestaApp(App):
         self.theme_cls.primary_palette = "Black"
         self.theme_cls.accent_palette = 'Blue'
         sm = ScreenManager()
-        sm.add_widget(LoginScreen(name='login'))
         sm.add_widget(CrearScreen(name='crear'))
+        sm.add_widget(LoginScreen(name='login'))
         sm.add_widget(RegisterScreen(name='register'))
         sm.add_widget(PrincipalScreen(name='principal'))
         sm.add_widget(DescargarScreen(name='descargar'))

@@ -2,3 +2,10 @@ kivy==2.3.0
 kivymd @ https://github.com/kivymd/KivyMD/archive/master.zip
 pymongo==4.10.1
 bcrypt==4.2.0
+google-api-core==2.19.0
+google-api-python-client==2.129.0
+google-auth==2.29.0
+google-auth-httplib2==0.2.0
+googleapis-common-protos==1.63.0
+httplib2==0.22.0
+oauth2client==4.1.3
