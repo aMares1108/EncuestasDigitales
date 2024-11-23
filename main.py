@@ -14,15 +14,15 @@ class EncuestaApp(App):
     user = DictProperty()
 
     def on_user(self, instance, value):
-        self.root.current = 'principal' if self.user else 'login'
+        self.root.current = 'principal' if value else 'login'
 
     def build(self):
         self.theme_cls.theme_style = "Light"
         self.theme_cls.primary_palette = "Black"
         self.theme_cls.accent_palette = 'Blue'
         sm = ScreenManager()
-        sm.add_widget(CrearScreen(name='crear'))
         sm.add_widget(LoginScreen(name='login'))
+        sm.add_widget(CrearScreen(name='crear'))
         sm.add_widget(RegisterScreen(name='register'))
         sm.add_widget(PrincipalScreen(name='principal'))
         return sm
