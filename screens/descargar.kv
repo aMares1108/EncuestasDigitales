@@ -1,0 +1,65 @@
+<DescargarScreen>:
+    MDBoxLayout:        
+        md_bg_color: self.theme_cls.backgroundColor
+
+    
+    MDScreen:
+        md_bg_color: self.theme_cls.secondaryContainerColor
+
+        MDTopAppBar:
+            type: "small"   
+            size_hint_x: 1
+            pos_hint: {"center_x": .5, "center_y": .97}
+
+            MDTopAppBarLeadingButtonContainer:
+
+                MDActionTopAppBarButton:
+                    icon: "menu"
+
+            MDTopAppBarTitle:
+                text: "Inicio"
+            
+    MDBoxLayout:
+        size_hint_y: None
+        orientation: 'vertical'        
+        pos_hint: {"top": .7}  
+        spacing: dp(5)
+        padding: 10
+        
+        MDCard:        
+            adaptive_height: True            
+            orientation: 'horizontal'     
+            spacing: dp(10)
+            padding: 10,30
+            elevation: 2
+            on_press:                 
+                root.manager.current = 'principal' 
+                root.manager.transition.direction = "right"
+
+            MDIcon:
+                icon: "form-select"                
+                size_hint: None, None
+                size: dp(48), dp(48)
+                pos_hint: {"center_y": 0.5}
+            
+            MDBoxLayout:
+                orientation: 'vertical'
+                adaptive_height: True                 
+                
+                MDLabel:
+                    text: "Cédula de evaluación de la salud de las familias de los trabajadores"
+                    halign: 'left'
+                    theme_text_color: 'Primary'
+                    size_hint_y: None
+                    height: self.texture_size[1]
+                
+                MDButton:
+                    pos_hint: {"center_x": .8}
+                    on_press: 
+                        root.manager.current = 'principal'                
+                        root.manager.transition.direction = "left"  
+                    MDButtonIcon:
+                        icon: "download"
+                    
+                    MDButtonText:
+                        text: "Descargar"                         

@@ -1,0 +1,62 @@
+<AplicarScreen>:
+    MDBoxLayout:        
+        md_bg_color: self.theme_cls.backgroundColor
+
+    
+    MDScreen:
+        md_bg_color: self.theme_cls.secondaryContainerColor
+
+        MDTopAppBar:
+            type: "small"   
+            size_hint_x: 1
+            pos_hint: {"center_x": .5, "center_y": .97}
+
+            MDTopAppBarLeadingButtonContainer:
+
+                MDActionTopAppBarButton:
+                    icon: "menu"
+
+            MDTopAppBarTitle:
+                text: "Inicio"
+            
+    MDBoxLayout:
+        size_hint_y: None
+        orientation: 'vertical'        
+        pos_hint: {"top": .5}  
+        spacing: dp(5)
+        padding: 20
+        
+        MDCard:        
+            adaptive_height: True            
+            orientation: 'horizontal'     
+            spacing: dp(5)            
+            padding: 5,5
+            elevation: 2
+            on_press:                 
+                root.manager.current = 'principal' 
+                root.manager.transition.direction = "right"
+
+            MDIcon:
+                icon: "pencil-outline"                
+                size_hint: None, None
+                size: dp(48), dp(48)
+                pos_hint: {"center_y": 0.5}
+            
+            MDBoxLayout:
+                orientation: 'vertical'
+                adaptive_height: True                 
+                spacing: dp(5)
+
+                MDLabel:
+                    text: "Crear encuestas"
+                    halign: 'left'
+                    theme_text_color: 'Primary'
+                    size_hint_y: None
+                    height: self.texture_size[1]
+                
+                MDLabel:
+                    text: "Ingrese aqui para crear una nueva encuesta"
+                    halign: 'left'
+                    theme_text_color: 'Secondary'
+                    size_hint_y: None
+                    height: self.texture_size[1]   

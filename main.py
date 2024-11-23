@@ -9,6 +9,9 @@ from componentes.login import LoginScreen
 from componentes.register import RegisterScreen
 from componentes.principal import PrincipalScreen
 from componentes.crear import CrearScreen
+from componentes.aplicar import AplicarScreen
+from componentes.descargar import DescargarScreen
+from componentes.generar import GenerarScreen
 
 class EncuestaApp(App):
     user = DictProperty()
@@ -25,6 +28,10 @@ class EncuestaApp(App):
         sm.add_widget(CrearScreen(name='crear'))
         sm.add_widget(RegisterScreen(name='register'))
         sm.add_widget(PrincipalScreen(name='principal'))
+        sm.add_widget(DescargarScreen(name='descargar'))
+        sm.add_widget(AplicarScreen(name='aplicar'))
+        sm.add_widget(GenerarScreen(name='generar'))
+        
         return sm
     
     def check_complete(self):
