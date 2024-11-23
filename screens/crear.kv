@@ -1,4 +1,5 @@
 #:import search re.search
+#:import Clipboard kivy.core.clipboard.Clipboard
 
 <CrearScreen>:
             
@@ -37,11 +38,12 @@
 
             MDBoxLayout:
                 # md_bg_color: (1,0,0,0.5)
+                orientation: 'horizontal'
                 MDTextField:
                     id: input_form_id
                     pos_hint: {"center_x": 0.5, "center_y": 0.5}            
                     required: True
-                    size_hint_min_x: 290
+                    size_hint_min_x: 300
                     on_focus: 
                         app.check_complete()
                     on_text:
@@ -49,6 +51,12 @@
 
                     MDTextFieldHintText:
                         text: "Ingrese url del formulario"
+                
+                MDIconButton:
+                    icon: 'clipboard-text'
+                    pos_hint: {'center_y':0.5}
+                    on_press: 
+                        input_form_id.text = Clipboard.paste()
 
             MDBoxLayout:
                 # md_bg_color: (0,0,1,0.5)
