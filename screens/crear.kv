@@ -55,8 +55,9 @@
                 MDIconButton:
                     icon: 'clipboard-text'
                     pos_hint: {'center_y':0.5}
-                    on_press: 
+                    on_press:
                         input_form_id.text = Clipboard.paste()
+                        app.check_complete()
 
             MDBoxLayout:
                 # md_bg_color: (0,0,1,0.5)
@@ -91,7 +92,13 @@
                             icon: "plus"
                         
                         MDButtonText:                
-                            text: "Crear"  
+                            text: "Crear"
+                    MDCircularProgressIndicator:
+                        id: spinner
+                        size_hint: None, None
+                        size: "40dp", "40dp"
+                        pos_hint: {'center_x': .5, 'center_y': .5}
+                        active: False    
 
                 MDAnchorLayout:
                     MDButton:

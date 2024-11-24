@@ -1,9 +1,10 @@
 from json import loads,dump
 from pymongo import MongoClient
-from os import getenv
+from bson import ObjectId
+from os import getenv,urandom
 from form.get_form import call_forms_api
 
-def save_simplify_form(form_id: str, passwd: str):
+def save_simplify_form(form_id: str, passwd: str, user_id: ObjectId):
     """Guarda en MongoDB el formulario simplificado
 
     Args:
@@ -14,8 +15,10 @@ def save_simplify_form(form_id: str, passwd: str):
     """
     doc = call_forms_api(form_id)
     doc = simplify(doc)
-    doc['password'] = passwd
+    doc['password'] = passwd if passwd else urandom(3).hex()
+    doc['user'] = user_id
     with MongoClient(getenv('MONGO_URI')) as mongo:
+        mongo.test.form.insert
         res = mongo.test.form.insert_one(doc)
     return res
 
