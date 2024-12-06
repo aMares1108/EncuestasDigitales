@@ -11,6 +11,8 @@ from kivymd.uix.dialog import (
     MDDialogSupportingText
 )
 
+from kivy.properties import StringProperty, BooleanProperty
+
 from queue import Queue
 from threading import Thread
 
@@ -20,18 +22,19 @@ class LoginException(Exception):
         return super().__init__(*args)
 
 class LoginScreen(Screen):
+    correo = StringProperty() # void en producción
+    passwd = StringProperty() # void en producción
+    spinner = BooleanProperty(False)
+    b_enter = BooleanProperty(True)
 
     def __init__(self, **kw):
         self.queue = Queue()
         super().__init__(**kw)
 
     def login(self, *args):
-        self.ids.spinner.active = True
-        self.ids.button_enter.disabled = True
-        correo = self.ids.input_email.text
-        passwd = self.ids.input_password.text
-        Thread(target=self.connect, args=(correo, passwd)).start()
-        # t.join()
+        self.spinner = True
+        self.b_enter = True
+        Thread(target=self.connect, args=(self.correo, self.passwd)).start()
 
     def connect(self, correo: str, passwd: str):
         try:
@@ -77,6 +80,6 @@ class LoginScreen(Screen):
         else:
             app = App.get_running_app()
             app.user = res
-        self.ids.spinner.active = False
-        self.ids.button_enter.disabled = False
+        self.spinner = False
+        self.b_enter = False
 

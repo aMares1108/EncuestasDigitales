@@ -47,6 +47,7 @@
                     required: True
                     write_tab: False
                     on_focus: app.check_complete()
+                    text: root.correo
                     
                     MDTextFieldLeadingIcon:
                         icon: "email"                            
@@ -61,7 +62,8 @@
                     pos_hint: {"bottom":0}
                     password: True
                     write_tab: False
-                    on_focus: app.check_complete()    
+                    on_focus: app.check_complete()
+                    text: root.passwd
 
                     MDTextFieldLeadingIcon:
                         icon: "lock"   
@@ -80,7 +82,7 @@
             AnchorLayout:
                 MDButton:
                     id: button_enter
-                    disabled: True
+                    disabled: root.b_enter
                     on_press: 
                         # root.show_load()
                         root.login()
@@ -95,7 +97,7 @@
                     size_hint: None, None
                     size: "40dp", "40dp"
                     pos_hint: {'center_x': .5, 'center_y': .5}
-                    active: False    
+                    active: root.spinner    
 
             AnchorLayout:
                 MDButton: 
