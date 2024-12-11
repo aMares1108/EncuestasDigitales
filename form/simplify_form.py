@@ -42,6 +42,8 @@ def simplify(api_res: dict|str):
         'questions': []
     }]
 
+    api_res['title'] = api_res['info']['title']
+
     for key in ['info', 'settings', 'revisionId', 'responderUri']:
         api_res.pop(key,None)
     
