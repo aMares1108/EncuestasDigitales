@@ -27,11 +27,16 @@ class RListItem(MDCard):
     title = StringProperty()
     formId = StringProperty()
     password = StringProperty()
+    user = ObjectProperty()
     sections = ListProperty()
 
     def save(self):
-        screen = App.get_running_app().root.current_screen
-        screen.comp_password = MDTextField()
+        app = App.get_running_app()
+        screen = app.root.current_screen
+        screen.comp_password = MDTextField(
+            text=self.password if app.user._id==self.user else None,
+            disabled=app.user._id==self.user
+            )
         MDDialog(
             MDDialogIcon(
                 icon='file-document-plus-outline'
