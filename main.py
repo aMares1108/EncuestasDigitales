@@ -3,7 +3,7 @@ from kivy.uix.screenmanager import ScreenManager
 from kivy.properties import DictProperty
 
 from kivy.core.window import Window
-Window.size = (320,480)
+Window.size = (720,580)
 
 from componentes.login import LoginScreen
 from componentes.register import RegisterScreen

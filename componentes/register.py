@@ -21,8 +21,14 @@ class RegisterScreen(Screen):
             'type': 'encuestador'
             }
         try:
-            with MongoClient(getenv('MONGO_URI')) as mongo:
-                res = mongo.test.user.insert_one(doc)
+            # with MongoClient(getenv('MONGO_URI')) as mongo:
+            with MongoClient("mongodb+srv://user:contrasenia@clustered.kev66.mongodb.net/?retryWrites=true&w=majority&appName=ClusterED") as mongo:
+            # mongo = MongoClient("mongodb+srv://user:contrasenia@clustered.kev66.mongodb.net/?retryWrites=true&w=majority&appName=ClusterED")  # Replace with your MongoDB URI if needed
+                db = mongo["DBEncuestasDigitales"]
+                collection = db["user"]
+                res = collection.insert_one(doc)
+                print(f"Document inserted with ID: {res.inserted_id}")
+            # res = mongo.DBEncuestasDigitales.user.insert_one(doc)
         except:
             MDDialog(
                 MDDialogIcon(
@@ -33,6 +39,7 @@ class RegisterScreen(Screen):
                 )
             ).open()
         else:
+            # if res.acknowledged:            
             if res.acknowledged:
                 self.manager.transition.direction = 'left'
                 self.manager.current = 'principal'

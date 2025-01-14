@@ -23,6 +23,7 @@ from kivymd.uix.textfield import MDTextField
 from form.retrieve import get_forms
 from json import dump
 
+
 class RListItem(MDCard):
     title = StringProperty()
     formId = StringProperty()

@@ -37,15 +37,17 @@ class LoginScreen(Screen):
         Thread(target=self.connect, args=(self.correo, self.passwd)).start()
 
     def connect(self, correo: str, passwd: str):
+        print(f"\n********CORREO: {correo}\n")
         try:
-            with MongoClient(getenv('MONGO_URI')) as mongo:
-                res = mongo.test.user.find_one({
+            with MongoClient("mongodb+srv://user:contrasenia@clustered.kev66.mongodb.net/?retryWrites=true&w=majority&appName=ClusterED") as mongo:
+                res = mongo.DBEncuestasDigitales.user.find_one({
                     'email': correo
                 })
-            
+            print(f"\n********RES: {res}\n")
+            passwd = "123"
             if not res:
                 raise LoginException('account-alert',f'Usuario {correo} no encontrado')
-            elif not checkpw(passwd.encode('utf-8'), res['password']):
+            elif not checkpw(passwd.encode('utf-8'), res['password']):            
                 raise LoginException('security',f'Contraseña incorrecta para {correo}')
             else:
                 self.queue.put(res)

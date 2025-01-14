@@ -23,6 +23,7 @@ from re import split
 from pymongo.errors import DuplicateKeyError
 from form.simplify_form import save_simplify_form
 
+
 class CrearScreen(Screen):
     form_link = StringProperty()
     form_password = StringProperty()
@@ -80,6 +81,7 @@ class CrearScreen(Screen):
     def form(self, obj):
         obj.parent.parent.parent.parent.dismiss()
         user = App.get_running_app().user
+        print(f"\n********USER: {user}\n")
         try:
             if not user:
                 raise Exception('No ha iniciado sesión')
@@ -111,6 +113,7 @@ class CrearScreen(Screen):
             q.put(e)
         finally:
             Clock.schedule_once(lambda dt: self.save_end(q))
+            
     def save_end(self, q:Queue,  *args):
         self.ids.spinner.active = False
         self.ids.input_form_id.text = ''

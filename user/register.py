@@ -4,6 +4,8 @@ from json import dump
 from bcrypt import hashpw, gensalt
 from email_validator import validate_email, ValidatedEmail
 from email_validator.exceptions_types import EmailNotValidError
+
+
 def register_user(doc: dict):
     """Guarda en MongoDB el formulario simplificado
 
@@ -22,5 +24,5 @@ def register_user(doc: dict):
         raise EmailNotValidError()
     doc['password'] = hashpw(str(doc['password']).encode('utf-8'), gensalt())
     with MongoClient(getenv('MONGO_URI')) as mongo:
-        res = mongo.test.user.insert_one(doc)
+        res = mongo.DBEncuestasDigitales.user.insert_one(doc)
     return str(res.inserted_id) if res.acknowledged else None
