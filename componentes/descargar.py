@@ -17,9 +17,11 @@ from kivymd.uix.dialog import (
 )
 from kivymd.uix.button import (
     MDButton,
-    MDButtonText
+    MDButtonText,
+    MDIconButton
 )
 from kivymd.uix.textfield import MDTextField
+from kivy.core.clipboard import Clipboard
 from form.retrieve import get_forms
 from json import dump
 
@@ -48,7 +50,12 @@ class RListItem(MDCard):
                 text= f"Al confirmar, se descargará un formulario con id {self.formId}.\nIngrese la contraseña de descarga:"
             ),
             MDDialogContentContainer(
-                screen.comp_password
+                screen.comp_password,
+                MDIconButton(
+                    icon='content-copy',
+                    on_release=lambda x:Clipboard.copy(self.password if app.user._id==self.user else None),
+                    disabled=app.user._id!=self.user
+                )
             ),
             MDDialogButtonContainer(
                 Widget(),
@@ -87,6 +94,7 @@ class RListItem(MDCard):
                 text=supText
             )
         ).open()
+        screen.comp_password = None
         
 
 class DescargarScreen(Screen):
