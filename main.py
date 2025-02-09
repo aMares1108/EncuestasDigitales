@@ -1,6 +1,6 @@
 from kivymd.app import MDApp as App
 from kivy.uix.screenmanager import ScreenManager
-from kivy.properties import DictProperty
+from kivy.properties import DictProperty, StringProperty
 
 from kivy.core.window import Window
 Window.size = (320,480)
@@ -12,12 +12,21 @@ from componentes.crear import CrearScreen
 from componentes.aplicar import AplicarScreen
 from componentes.descargar import DescargarScreen
 from componentes.generar import GenerarScreen
+from componentes.principal_reducida import PrincipalReducidaScreen
 
 class EncuestaApp(App):
     user = DictProperty()
+    user_type = StringProperty()
 
     def on_user(self, instance, value):
-        self.root.current = 'principal' if value else 'login'
+        if value:
+            if value.type.lower() == 'investigador':
+                self.user_type = 'principal'
+            else:
+                self.user_type = 'principal_reducida'
+            self.root.current = self.user_type
+        else:
+            self.root.current = 'login'
 
     def build(self):
         self.theme_cls.theme_style = "Light"
@@ -27,6 +36,7 @@ class EncuestaApp(App):
         sm.add_widget(LoginScreen(name='login'))
         sm.add_widget(RegisterScreen(name='register'))
         sm.add_widget(PrincipalScreen(name='principal'))
+        sm.add_widget(PrincipalReducidaScreen(name='principal_reducida'))
         sm.add_widget(CrearScreen(name='crear'))
         sm.add_widget(DescargarScreen(name='descargar'))
         sm.add_widget(AplicarScreen(name='aplicar'))

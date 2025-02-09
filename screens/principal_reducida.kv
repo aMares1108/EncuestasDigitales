@@ -1,4 +1,4 @@
-<PrincipalScreen>:
+<PrincipalReducidaScreen>:
     on_pre_leave: 
         self.manager.current = 'login' if not app.user else self.manager.current
     on_pre_enter: 
@@ -26,20 +26,33 @@
         MDScrollView:
 
             MDList:
-                
-                MDListItem:   
-                    on_press:                 
-                        root.manager.current = 'crear' 
+                MDListItem:            
+                    on_release: 
+                        root.manager.current = "descargar" 
                         root.manager.transition.direction = "left"
-
-                    MDListItemLeadingIcon:
-                        icon: "pencil-outline"                
                     
+                    MDListItemLeadingIcon:
+                        icon: "download"                
+
                     MDListItemHeadlineText:
-                        text: "Crear encuestas"
+                        text: "Descargar encuesta"
                         
                     MDListItemSupportingText:
-                        text: "Ingrese aqui para crear una nueva encuesta"
+                        text: "Ingrese aqui para descargar una encuesta y poder aplicarla sin necesidad de internet"
+
+                MDListItem:            
+                    on_release: 
+                        root.manager.current = "aplicar" 
+                        root.manager.transition.direction = "left"
+                    
+                    MDListItemLeadingIcon:
+                        icon: "account"               
+
+                    MDListItemHeadlineText:
+                        text: "Aplicar nueva encuesta"
+                        
+                    MDListItemSupportingText:
+                        text: "Ingrese aqui para aplicar una encuesta previamente descargada"
 
                 MDListItem:            
                     on_release: 
