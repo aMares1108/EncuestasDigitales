@@ -1,140 +1,144 @@
 <RegisterScreen>: 
     MDBoxLayout:        
-        md_bg_color: self.theme_cls.secondaryContainerColor
-    
-    MDCard:        
-        style: "elevated"
-        orientation: 'vertical'
-        pos_hint: {"center_x": .5, "center_y": .5}        
-        size_hint_max: "300dp", "500dp"   
-        radius: [20, 20, 20, 20]       
-        padding: 50, 0
-
-        MDBoxLayout: # Cabecera
+        md_bg_color: self.theme_cls.primaryContainerColor
+    MDScrollView:
+        adaptive_height: True
+        MDBoxLayout:
             adaptive_height: True
+            padding: 20,20
+            MDCard:
+                style: "elevated"
+                adaptive_height: True
+                orientation: 'vertical'
+                radius: [20, 20, 20, 20]   
+                padding: 50, 0
+                size_hint_min: "300dp", None
 
-            MDLabel:
-                text: "Registro de nuevo usuario"
-                theme_text_color: 'Primary'
-                bold: True
-                halign: 'center' 
-                
+                MDBoxLayout: # Cabecera
+                    adaptive_height: True
 
-        MDBoxLayout: # Inputs
-            adaptive_height: True
-            orientation: 'vertical'
-            spacing: 20
-             
-            MDDropDownItem:
-                pos_hint: {"center_x": .5, "center_y": .5}
-                width: self.parent.width
-                on_release: root.open_menu(self)
+                    MDLabel:
+                        text: "Registro de nuevo usuario"
+                        theme_text_color: 'Primary'
+                        bold: True
+                        halign: 'center' 
+                        
 
-                MDDropDownItemText:
-                    error: root.user_type_validator
-                    id: input_user_type
-                    text: "Seleccione tipo de usuario"
-
-            MDTextField:
-                id: input_nombre
-                write_tab: False
-                required: True
-                on_focus: app.check_complete()
-                
-                MDTextFieldLeadingIcon:
-                    icon: "account"                            
-                
-                MDTextFieldHintText:
-                    text: "Nombre(s)"
-
-            MDTextField:
-                id: input_apellido
-                write_tab: False
-                required: True
-                on_focus: app.check_complete()
-                
-                MDTextFieldLeadingIcon:
-                    icon: "account"                            
-                
-                MDTextFieldHintText:
-                    text: "Apellidos"
-
-            MDTextField:
-                id: input_email
-                validator: 'email'
-                on_focus: button_enter.disabled = self.error
-                write_tab: False
-                required: True
-                on_focus: app.check_complete()
-                # error: False
-                # required: True
-
-                MDTextFieldLeadingIcon:
-                    icon: "email"                            
-                
-                MDTextFieldHintText:
-                    text: "Correo electrónico"
-                    mode: 'on_error'
-
-        MDBoxLayout: # Inputs password
-            adaptive_height: True
-            orientation: 'vertical'
-            padding: 0,20,0,0
-            spacing: 30
-            MDTextField:
-                id: input_password
-                password: True       
-                write_tab: False
-                required: True
-                on_focus:app.check_complete()
-
-                MDTextFieldLeadingIcon:
-                    icon: "lock"   
-
-                MDTextFieldHintText:
-                    text: "Contraseña"
-                
-                MDTextFieldMaxLengthText:
-                    max_text_length:  15
-
-            CompareField:
-                id: input_password_check
-                password: True       
-                write_tab: False
-                required: True
-                on_focus:app.check_complete()
-                on_text: self.compare(input_password)
-
-                MDTextFieldLeadingIcon:
-                    icon: "lock-check"   
-
-                MDTextFieldHintText:
-                    text: "Confirmar contraseña"
-                
-
-        MDBoxLayout: # Buttons
-            orientation: 'horizontal'
-            spacing: 25     
-            adaptive_height: True
-
-            AnchorLayout:
-                MDButton:
-                    on_press: 
-                        # root.manager.current = 'login'                
-                        root.manager.transition.direction = "right"
-                        root.manager.current = root.manager.previous()
+                MDBoxLayout: # Inputs
+                    adaptive_height: True
+                    orientation: 'vertical'
+                    spacing: 20
                     
-                    MDButtonText:
-                        text: "Cancelar"
-                        text_color: "red"  
+                    MDDropDownItem:
+                        pos_hint: {"center_x": .5, "center_y": .5}
+                        width: self.parent.width
+                        on_release: root.open_menu(self)
 
-            AnchorLayout:
-                MDButton:
-                    id: button_enter
-                    disabled: True
-                    on_press: 
-                        root.register()
-                    
-                    MDButtonText:
-                        text: "Registrar"
-                        text_color: "red"  
+                        MDDropDownItemText:
+                            error: root.user_type_validator
+                            id: input_user_type
+                            text: "Seleccione tipo de usuario"
+
+                    MDTextField:
+                        id: input_nombre
+                        write_tab: False
+                        required: True
+                        on_focus: app.check_complete()
+                        
+                        MDTextFieldLeadingIcon:
+                            icon: "account"                            
+                        
+                        MDTextFieldHintText:
+                            text: "Nombre(s)"
+
+                    MDTextField:
+                        id: input_apellido
+                        write_tab: False
+                        required: True
+                        on_focus: app.check_complete()
+                        
+                        MDTextFieldLeadingIcon:
+                            icon: "account"                            
+                        
+                        MDTextFieldHintText:
+                            text: "Apellidos"
+
+                    MDTextField:
+                        id: input_email
+                        validator: 'email'
+                        on_focus: button_enter.disabled = self.error
+                        write_tab: False
+                        required: True
+                        on_focus: app.check_complete()
+                        # error: False
+                        # required: True
+
+                        MDTextFieldLeadingIcon:
+                            icon: "email"                            
+                        
+                        MDTextFieldHintText:
+                            text: "Correo electrónico"
+                            mode: 'on_error'
+
+                MDBoxLayout: # Inputs password
+                    adaptive_height: True
+                    orientation: 'vertical'
+                    padding: 0,20,0,0
+                    spacing: 30
+                    MDTextField:
+                        id: input_password
+                        password: True       
+                        write_tab: False
+                        required: True
+                        on_focus:app.check_complete()
+
+                        MDTextFieldLeadingIcon:
+                            icon: "lock"   
+
+                        MDTextFieldHintText:
+                            text: "Contraseña"
+                        
+                        MDTextFieldMaxLengthText:
+                            max_text_length:  15
+
+                    CompareField:
+                        id: input_password_check
+                        password: True       
+                        write_tab: False
+                        required: True
+                        on_focus:app.check_complete()
+                        on_text: self.compare(input_password)
+
+                        MDTextFieldLeadingIcon:
+                            icon: "lock-check"   
+
+                        MDTextFieldHintText:
+                            text: "Confirmar contraseña"
+                        
+
+                MDBoxLayout: # Buttons
+                    orientation: 'horizontal'
+                    spacing: 25     
+                    adaptive_height: True
+
+                    AnchorLayout:
+                        MDButton:
+                            on_press: 
+                                # root.manager.current = 'login'                
+                                root.manager.transition.direction = "right"
+                                root.manager.current = root.manager.previous()
+                            
+                            MDButtonText:
+                                text: "Cancelar"
+                                text_color: "red"  
+
+                    AnchorLayout:
+                        MDButton:
+                            id: button_enter
+                            disabled: True
+                            on_press: 
+                                root.register()
+                            
+                            MDButtonText:
+                                text: "Registrar"
+                                text_color: "red"  
