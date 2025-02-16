@@ -1,62 +1,114 @@
 <AplicarScreen>:
     MDBoxLayout:        
-        md_bg_color: self.theme_cls.backgroundColor
+        md_bg_color: self.theme_cls.primaryContainerColor
+    MDScrollView:
+        adaptive_height: True
+        MDBoxLayout:
+            adaptive_height: True    
+            orientation: 'vertical'
+            padding: 20,20
 
-    
-    MDScreen:
-        md_bg_color: self.theme_cls.secondaryContainerColor
-
-        MDTopAppBar:
-            type: "small"   
-            size_hint_x: 1
-            pos_hint: {"center_x": .5, "center_y": .97}
-
-            MDTopAppBarLeadingButtonContainer:
-
-                MDActionTopAppBarButton:
-                    icon: "menu"
-
-            MDTopAppBarTitle:
-                text: "Inicio"
-            
-    MDBoxLayout:
-        size_hint_y: None
-        orientation: 'vertical'        
-        pos_hint: {"top": .5}  
-        spacing: dp(5)
-        padding: 20
-        
-        MDCard:        
-            adaptive_height: True            
-            orientation: 'horizontal'     
-            spacing: dp(5)            
-            padding: 5,5
-            elevation: 2
-            on_press:                 
-                root.manager.current = app.user_type
-                root.manager.transition.direction = "right"
-
-            MDIcon:
-                icon: "pencil-outline"                
-                size_hint: None, None
-                size: dp(48), dp(48)
-                pos_hint: {"center_y": 0.5}
-            
-            MDBoxLayout:
-                orientation: 'vertical'
-                adaptive_height: True                 
-                spacing: dp(5)
+            MDBoxLayout: # Cabecera
+                adaptive_height: True
 
                 MDLabel:
-                    text: "Crear encuestas"
-                    halign: 'left'
+                    text: 'Capture la información del encuestado y presione "Comenzar" para iniciar la encuesta.'
                     theme_text_color: 'Primary'
+                    bold: True
+                    halign: 'center'
                     size_hint_y: None
                     height: self.texture_size[1]
+                    
+            MDBoxLayout: # Inputs
+                adaptive_height: True
+                orientation: 'vertical'
+                spacing: 20
+                padding: 0,20,0,0
+                
+                MDDropDownItem:
+                    pos_hint: {"center_x": .5, "center_y": .5}
+                    width: self.parent.width
+                    on_release: root.open_menu(self)
+
+                    MDDropDownItemText:
+                        error: root.state_validator
+                        id: input_estado
+                        text: "Estado de la República"
+
+                MDTextField:
+                    id: input_apellidos
+                    write_tab: False
+                    required: True
+                    on_focus: app.check_complete()
+                    
+                    # MDTextFieldLeadingIcon:
+                    #     icon: "account"                            
+                    
+                    MDTextFieldHintText:
+                        text: "Apellidos de la familia"
+
+                MDTextField:
+                    id: input_direccion
+                    write_tab: False
+                    required: True
+                    on_focus: app.check_complete()
+                    
+                    # MDTextFieldLeadingIcon:
+                    #     icon: "account"                            
+                    
+                    MDTextFieldHintText:
+                        text: "Dirección"
+
+                MDTextField:
+                    id: input_municipio
+                    write_tab: False
+                    required: True
+                    on_focus: app.check_complete()
+
+                    # MDTextFieldLeadingIcon:
+                    #     icon: "email"                            
+                    
+                    MDTextFieldHintText:
+                        text: "Municipio"
+
+                MDTextField:
+                    id: input_telefono
+                    write_tab: False
+                    required: True
+                    on_focus: app.check_complete()
+
+                    # MDTextFieldLeadingIcon:
+                    #     icon: "email"                            
+                    
+                    MDTextFieldHintText:
+                        text: "Teléfono"
                 
                 MDLabel:
-                    text: "Ingrese aqui para crear una nueva encuesta"
-                    halign: 'left'
-                    theme_text_color: 'Secondary'
-                    size_hint_y: None
-                    height: self.texture_size[1]   
+                    
+
+
+            MDBoxLayout: # Buttons
+                orientation: 'horizontal'
+                spacing: 25     
+                adaptive_height: True
+
+                AnchorLayout:
+                    MDButton:
+                        on_press: 
+                            root.manager.transition.direction = "right"
+                            root.manager.current = app.user_type
+                        
+                        MDButtonText:
+                            text: "Cancelar"
+                            text_color: "red"  
+
+                AnchorLayout:
+                    MDButton:
+                        id: button_enter
+                        disabled: True
+                        on_press: 
+                            root.register()
+                        
+                        MDButtonText:
+                            text: "Comenzar"
+                            text_color: "red"  

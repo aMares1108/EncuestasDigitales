@@ -58,10 +58,10 @@ class RegisterScreen(Screen):
                 "on_release": lambda x=f"{data}": self.menu_callback(x),
             } for data in ['Encuestador', 'Investigador']
         ]
-        self.user_type_validator = False
         MDDropdownMenu(caller=item, items=menu_items).open()
 
     def menu_callback(self, text_item):
+        self.user_type_validator = False
         self.ids.input_user_type.text = text_item
 
 class CompareField(MDTextField):

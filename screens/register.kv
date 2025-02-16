@@ -124,9 +124,8 @@
                     AnchorLayout:
                         MDButton:
                             on_press: 
-                                # root.manager.current = 'login'                
                                 root.manager.transition.direction = "right"
-                                root.manager.current = root.manager.previous()
+                                root.manager.current = app.user_type
                             
                             MDButtonText:
                                 text: "Cancelar"
