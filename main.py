@@ -13,6 +13,7 @@ from componentes.aplicar import AplicarScreen
 from componentes.descargar import DescargarScreen
 from componentes.generar import GenerarScreen
 from componentes.principal_reducida import PrincipalReducidaScreen
+from componentes.encuestas import EncuestasScreen
 
 class EncuestaApp(App):
     user = DictProperty()
@@ -41,6 +42,7 @@ class EncuestaApp(App):
         sm.add_widget(DescargarScreen(name='descargar'))
         sm.add_widget(AplicarScreen(name='aplicar'))
         sm.add_widget(GenerarScreen(name='generar'))
+        sm.add_widget(EncuestasScreen(name='encuestas'))
         
         return sm
     
