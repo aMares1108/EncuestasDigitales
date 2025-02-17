@@ -1,0 +1,49 @@
+<EncuestasScreen>:
+    MDBoxLayout:
+        md_bg_color: self.theme_cls.backgroundColor
+
+    MDScrollView:
+        MDRecycleView:
+            id: rv
+            viewclass: 'EListItem'
+            RecycleBoxLayout:
+                spacing: dp(5)
+                padding: 10
+                default_size_hint: 1, None 
+                size_hint_y: None 
+                # height: self.minimum_height 
+                orientation: 'vertical'
+    MDBoxLayout:
+        adaptive_height: True
+        MDAnchorLayout:
+            MDButton:
+                on_release: 
+                    root.manager.current = app.user_type
+                MDButtonText:
+                    text: "Cancelar"
+<EListItem>:
+    orientation: 'horizontal'
+    style: 'outlined'
+    on_release: root.save()
+    MDIcon:
+        icon: "form-select"                
+        size_hint: None, None
+        pos_hint: {"center_y": 0.5}
+
+    MDBoxLayout:
+        orientation: 'vertical'
+        MDLabel:
+            text: root.title
+            theme_text_color: 'Primary'
+            text_size: root.width, None
+            size: self.texture_size
+            max_lines: 3
+            
+        MDLabel:
+            role: 'small'
+            text: root.formId
+            theme_text_color: 'Primary'
+            text_size: root.width, None
+            size: self.texture_size
+            shorten: True
+        

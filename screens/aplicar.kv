@@ -84,6 +84,13 @@
                         text: "Teléfono"
                 
                 MDLabel:
+                    text: 'ATENCIÓN: Una vez iniciada la encuesta, debe de finalizarse sin pausas, ya que no es posible recuperar los datos si se cancela.'
+                    theme_text_color: 'Custom'
+                    text_color: (1,0,0,1)
+                    bold: True
+                    halign: 'center'
+                    size_hint_y: None
+                    height: self.texture_size[1]
                     
 
 
@@ -106,7 +113,7 @@
                     MDButton:
                         id: button_enter
                         disabled: True
-                        on_press: 
+                        on_release: 
                             root.register()
                         
                         MDButtonText:
