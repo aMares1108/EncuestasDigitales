@@ -1,8 +1,14 @@
 <EncuestasScreen>:
     MDBoxLayout:
         md_bg_color: self.theme_cls.backgroundColor
-
-    MDScrollView:
+    MDBoxLayout:
+        padding: 10,10
+        orientation: 'vertical'
+        MDLabel:
+            text: 'Seleccione la encuesta que desea aplicar:'
+            halign: 'center'
+            size_hint_y: None
+            height: self.texture_size[1]
         MDRecycleView:
             id: rv
             viewclass: 'EListItem'
@@ -11,7 +17,7 @@
                 padding: 10
                 default_size_hint: 1, None 
                 size_hint_y: None 
-                # height: self.minimum_height 
+                height: self.minimum_height 
                 orientation: 'vertical'
     MDBoxLayout:
         adaptive_height: True
@@ -23,27 +29,41 @@
                     text: "Cancelar"
 <EListItem>:
     orientation: 'horizontal'
-    style: 'outlined'
+    style: 'elevated'
+    adaptive_height: True
     on_release: root.save()
-    MDIcon:
-        icon: "form-select"                
-        size_hint: None, None
-        pos_hint: {"center_y": 0.5}
+    MDBoxLayout:
+        adaptive_width: True
+        MDIcon:
+            icon: "form-select"                
+            size_hint: None, None
+            pos_hint: {"center_y": 0.5}
 
     MDBoxLayout:
+        adaptive_height: True
         orientation: 'vertical'
         MDLabel:
             text: root.title
             theme_text_color: 'Primary'
-            text_size: root.width, None
-            size: self.texture_size
+            size_hint_y: None
+            height: self.texture_size[1]
+            max_lines: 2
+            
+        MDLabel:
+            role: 'medium'
+            text: root.description
+            theme_text_color: 'Custom'
+            text_color: [0,0,0,0.8]
+            size_hint_y: None
+            height: self.texture_size[1]
             max_lines: 3
             
         MDLabel:
             role: 'small'
             text: root.formId
-            theme_text_color: 'Primary'
-            text_size: root.width, None
-            size: self.texture_size
+            theme_text_color: 'Custom'
+            text_color: [0,0,0,0.6]
+            size_hint_y: None
+            height: self.texture_size[1]
             shorten: True
         
