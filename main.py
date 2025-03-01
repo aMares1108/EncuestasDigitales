@@ -17,7 +17,7 @@ from componentes.encuestas import EncuestasScreen
 
 class EncuestaApp(App):
     user = DictProperty()
-    user_type = StringProperty()
+    user_type = StringProperty('login')
 
     def on_user(self, instance, value):
         if value:
