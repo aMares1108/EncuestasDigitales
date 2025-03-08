@@ -4,12 +4,14 @@ from kivy.properties import BooleanProperty
 import csv
 from os.path import exists
 from os import makedirs
+from time import time
 
 class AplicarScreen(Screen):
     state_validator = BooleanProperty(True)
 
     def register(self):
         user_data = [self.ids.get(input).text for input in self.ids if input.startswith("input_")]
+        user_data.insert(0, int(time()))
         if not exists('respuestas'):
             makedirs('respuestas')
         with open('respuestas/temp.tsv', 'w', encoding='utf-8') as tsv:
