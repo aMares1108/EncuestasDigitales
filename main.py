@@ -14,6 +14,7 @@ from componentes.descargar import DescargarScreen
 from componentes.generar import GenerarScreen
 from componentes.principal_reducida import PrincipalReducidaScreen
 from componentes.encuestas import EncuestasScreen
+from componentes.preguntas import PreguntasScreen
 
 class EncuestaApp(App):
     user = DictProperty()
@@ -35,6 +36,7 @@ class EncuestaApp(App):
         self.theme_cls.accent_palette = 'Blue'
         sm = ScreenManager()
         sm.add_widget(LoginScreen(name='login'))
+        sm.add_widget(PreguntasScreen(name='preguntas'))
         sm.add_widget(RegisterScreen(name='register'))
         sm.add_widget(PrincipalScreen(name='principal'))
         sm.add_widget(PrincipalReducidaScreen(name='principal_reducida'))

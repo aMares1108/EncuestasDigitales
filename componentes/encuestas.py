@@ -10,7 +10,12 @@ class EListItem(MDCard):
     description = StringProperty()
 
     def save(self):
-        pass
+        screen_manager = self.parent.parent.parent.parent.parent
+        next_screen = screen_manager.get_screen("preguntas")
+        next_screen.form_id = self.formId
+        next_screen.title = self.title
+        next_screen.section = self.title
+        screen_manager.current = 'preguntas'
 
 class EncuestasScreen(Screen):
     def on_enter(self):

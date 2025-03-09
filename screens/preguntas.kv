@@ -1,0 +1,58 @@
+<PreguntasScreen>:
+    MDBoxLayout:
+        md_bg_color: self.theme_cls.backgroundColor
+    
+    MDBoxLayout:
+        orientation: 'vertical'
+        md_bg_color: self.theme_cls.secondaryContainerColor
+
+        MDTopAppBar:
+            type: "small"   
+            size_hint_x: 1
+
+            MDTopAppBarLeadingButtonContainer:
+
+                MDActionTopAppBarButton:
+                    icon: "menu"
+                    on_release: root.manager.current = app.user_type
+
+            MDTopAppBarTitle:
+                text: root.title
+                shorten: True
+            MDButton:
+                on_release: app.debug(buttons)
+                MDButtonText:
+                    text: "debug"
+        MDBoxLayout:
+            id: content
+            orientation: 'vertical'   
+            adaptive_height: True
+            MDCenter:
+                text: root.section
+                shorten: True
+                role: 'medium'
+                height: self.texture_size[1]
+            MDCenter:
+                text: f"Pregunta {root.index+root.section_offset+1}/{root.total}"
+                height: self.texture_size[1]
+                role: "small"
+            MDCenter:
+                text: root.pregunta
+                bold: True
+        MDBoxLayout:
+            id: response
+            size_hint_y: 1
+        MDBoxLayout:
+            adaptive_height: True
+            orientation: 'horizontal'
+            padding: 20,20
+            Widget:
+                size_hint_x: 1
+            MDBoxLayout:
+                id: buttons
+                adaptive_size: True
+            
+            
+<MDCenter@MDLabel>:
+    halign: 'center'
+    size_hint_y: None
