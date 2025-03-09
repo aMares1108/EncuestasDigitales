@@ -1,7 +1,6 @@
 from kivy.uix.screenmanager import Screen
 from kivymd.uix.menu import MDDropdownMenu
 from kivy.properties import BooleanProperty
-import csv
 from os.path import exists
 from os import makedirs
 from time import time
@@ -11,12 +10,11 @@ class AplicarScreen(Screen):
 
     def register(self):
         user_data = [self.ids.get(input).text for input in self.ids if input.startswith("input_")]
-        user_data.insert(0, int(time()))
+        user_data.insert(0, str(int(time())))
         if not exists('respuestas'):
             makedirs('respuestas')
-        with open('respuestas/temp.tsv', 'w', encoding='utf-8') as tsv:
-            escritor = csv.writer(tsv, delimiter='\t')
-            escritor.writerow(user_data)
+        with open('respuestas/temp.tsv', 'w', encoding='utf-8', newline='') as tsv:
+            tsv.write("\t".join(user_data))
         self.manager.current = 'encuestas'
 
     def open_menu(self, item):
