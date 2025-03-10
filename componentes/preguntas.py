@@ -76,6 +76,10 @@ class PreguntasScreen(Screen):
         elif self.tipo == 'choiceQuestion':
             if self.json_data['sections'][self.section_index]['questions'][value]['choiceType'] == "RADIO":
                 self.ids.response.add_widget(self.RadioQuestion(*self.json_data['sections'][self.section_index]['questions'][value]['options']))
+            elif self.json_data['sections'][self.section_index]['questions'][value]['choiceType'] == "DROP_DOWN":
+                self.ids.response.add_widget(self.RadioQuestion(*self.json_data['sections'][self.section_index]['questions'][value]['options']))
+            elif self.json_data['sections'][self.section_index]['questions'][value]['choiceType'] == "CHECKBOX":
+                self.ids.response.add_widget(self.MultiRadioQuestion(*self.json_data['sections'][self.section_index]['questions'][value]['options']))
             else:
                 self.ids.response.add_widget(self.DefaultQuestion())
         else:
@@ -125,12 +129,12 @@ class PreguntasScreen(Screen):
             self.add_widget(self.selected)
             for arg in args:
                 if 'value' in arg:
-                    checkbox = CheckItem(text=arg['value'])
+                    checkbox = CheckItem(text=arg['value'], group='group')
                     checkbox.bind(active=self.update_response)
                     self.add_widget(checkbox)
                 elif 'isOther' in arg:
                     if arg['isOther']:
-                        checkbox = CheckOther()
+                        checkbox = CheckOther(group='group')
                         checkbox.bind(
                             active=self.update_response,
                             focus=self.update_focus
@@ -148,6 +152,48 @@ class PreguntasScreen(Screen):
         def update_focus(self, instance, value):
             if instance.active:
                 self.response = instance.text
+    
+    class MultiRadioQuestion(MDBoxLayout):
+        options = ListProperty()
+        def _listtostr(self):
+            return ",".join(map(str,[x for x in self.options]))# if x is not None]))
+        response = AliasProperty(_listtostr, bind=['options'])
+
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.orientation = 'vertical'
+            self.selected = MDLabel(
+                text="Opciones seleccionadas: "+self.response,
+                shorten=True
+                )
+            self.add_widget(self.selected)
+            for arg in args:
+                if 'value' in arg:
+                    checkbox = CheckItem(text=arg['value'])
+                    checkbox.bind(active=self.update_response)
+                    checkbox.index = len(self.options)
+                    self.options.append(None)
+                    self.add_widget(checkbox)
+                elif 'isOther' in arg:
+                    if arg['isOther']:
+                        checkbox = CheckOther()
+                        checkbox.index = len(self.options)
+                        self.options.append(None)
+                        checkbox.bind(
+                            active=self.update_response,
+                            focus=self.update_focus
+                            )
+                        self.add_widget(checkbox)
+            self.add_widget(Widget(size_hint_y=1))
+        
+        def update_response(self, instance, value):
+            self.options[instance.index] = instance.text if value else None
+
+        def on_response(self, instance, value):
+            self.selected.text = "Opciones seleccionadas: " + value
+
+        def update_focus(self, instance, value):
+            self.options[instance.index] = instance.text if instance.active else None
 
     class MDButtonNext(MDButton):
         def __init__(self, *args, **kwargs):
@@ -181,6 +227,11 @@ class PreguntasScreen(Screen):
             screen = App.get_running_app().root.current_screen
             with open(f'respuestas/temp.tsv','+a') as file:
                 file.write(f'\t{screen.ids.response.children[0].response}')
+            with open(f'respuestas/temp.tsv','r') as file:
+                content = file.read()
+            with open(f'respuestas/{screen.form_id}.tsv','+a') as file:
+                file.write(f'{screen.ids.response.children[0].response}\n')
+            
             App.get_running_app().root.current = App.get_running_app().user_type
             MDDialog(
                 MDDialogIcon(
@@ -193,8 +244,9 @@ class PreguntasScreen(Screen):
 
 class CheckItem(MDBoxLayout):
     text = StringProperty()
-    group = StringProperty('group')
+    group = StringProperty()
     active = BooleanProperty(False)
+    index = NumericProperty(0)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
