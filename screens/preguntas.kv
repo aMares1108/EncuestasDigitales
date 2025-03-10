@@ -40,8 +40,9 @@
                 text: root.pregunta
                 bold: True
         MDBoxLayout:
-            id: response
-            size_hint_y: 1
+            MDScrollView:
+                id: response
+            # size_hint_y: 1
         MDBoxLayout:
             adaptive_height: True
             orientation: 'horizontal'
@@ -56,3 +57,25 @@
 <MDCenter@MDLabel>:
     halign: 'center'
     size_hint_y: None
+
+<CheckItem>:
+    orientation: 'horizontal'
+    adaptive_height: True
+    AnchorLayout:
+        adaptive_width: True
+        MDCheckbox:
+            group: root.group
+            on_active: root.active=self.active
+    MDBoxLayout:
+        MDLabel:
+            text: root.text
+
+<CheckOther>:
+    MDBoxLayout:
+        
+        MDTextField:
+            size_hint_x: 1
+            on_text: root.text=self.text
+            on_focus: root.focus=self.focus
+            MDTextFieldHintText:
+                text: 'Otro:'

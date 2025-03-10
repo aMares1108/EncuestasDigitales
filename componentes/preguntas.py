@@ -1,12 +1,19 @@
-from kivy.uix.accordion import ObjectProperty
 from kivy.uix.screenmanager import Screen
 from kivymd.uix.boxlayout import MDBoxLayout
+from kivymd.uix.anchorlayout import MDAnchorLayout
 from kivymd.uix.textfield import MDTextField, MDTextFieldHintText
+from kivymd.uix.selectioncontrol import MDCheckbox
 from kivymd.uix.widget import Widget
 from kivymd.uix.button import MDButton, MDButtonIcon, MDButtonText
 from kivymd.uix.dialog import MDDialog, MDDialogHeadlineText, MDDialogIcon
 from kivymd.uix.label import MDLabel
-from kivy.properties import NumericProperty, StringProperty
+from kivy.properties import (
+    NumericProperty, 
+    StringProperty, 
+    BooleanProperty,
+    ListProperty,
+    AliasProperty
+)
 from kivy.app import App
 
 from json import load
@@ -33,9 +40,7 @@ class PreguntasScreen(Screen):
         self.index = 0
         self.pregunta = self.json_data['sections'][0]['questions'][0].get('question','') or ''
         self.tipo = self.json_data['sections'][0]['questions'][0]['type']
-        if self.tipo == 'textQuestion':
-            self.ids.response.clear_widgets()
-            self.ids.response.add_widget(self.TextQuestion())
+        self.update_input_field(0)
         self.ids.buttons.clear_widgets()
         self.ids.buttons.add_widget(self.button)
 
@@ -63,29 +68,38 @@ class PreguntasScreen(Screen):
             self.tipo = self.json_data['sections'][self.section_index]['questions'][value]['type']
             self.pregunta = self.json_data['sections'][self.section_index]['questions'][value].get('question','') or ''
             self.ids.response.clear_widgets()
-            if self.tipo == 'textQuestion':
-                self.ids.response.add_widget(self.TextQuestion())
+            self.update_input_field(value)
+
+    def update_input_field(self, value):
+        if self.tipo == 'textQuestion':
+            self.ids.response.add_widget(self.TextQuestion())
+        elif self.tipo == 'choiceQuestion':
+            if self.json_data['sections'][self.section_index]['questions'][value]['choiceType'] == "RADIO":
+                self.ids.response.add_widget(self.RadioQuestion(*self.json_data['sections'][self.section_index]['questions'][value]['options']))
             else:
                 self.ids.response.add_widget(self.DefaultQuestion())
-
-
-    def next_question(self):
-        self.ids.response.add_widget(self.TextQuestion())
+        else:
+            self.ids.response.add_widget(self.DefaultQuestion())
     
     class TextQuestion(MDBoxLayout):
+        response = StringProperty()
         
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
             self.orientation = 'vertical'
             self.padding = (20,20)
             self.size_hint_y = 1
-            self.input = MDTextField(
+            input = MDTextField(
+                MDTextFieldHintText(text='Respuesta:'),
                 write_tab=False, 
                 required=True
                 )
-            self.input.add_widget(MDTextFieldHintText(text='Respuesta:'))
-            self.add_widget(self.input)
+            input.bind(text=self.update_response)
+            self.add_widget(input)
             self.add_widget(Widget(size_hint_y=1))
+
+        def update_response(self, instance, value):
+            self.response = value
 
     class DefaultQuestion(TextQuestion):
         def __init__(self, *args, **kwargs):
@@ -99,7 +113,41 @@ class PreguntasScreen(Screen):
             ), index=1)
     
     class RadioQuestion(MDBoxLayout):
-        pass
+        response = StringProperty()
+
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.orientation = 'vertical'
+            self.selected = MDLabel(
+                text="Opción seleccionada: "+self.response,
+                shorten=True
+                )
+            self.add_widget(self.selected)
+            for arg in args:
+                if 'value' in arg:
+                    checkbox = CheckItem(text=arg['value'])
+                    checkbox.bind(active=self.update_response)
+                    self.add_widget(checkbox)
+                elif 'isOther' in arg:
+                    if arg['isOther']:
+                        checkbox = CheckOther()
+                        checkbox.bind(
+                            active=self.update_response,
+                            focus=self.update_focus
+                            )
+                        self.add_widget(checkbox)
+            self.add_widget(Widget(size_hint_y=1))
+        
+        def update_response(self, instance, value):
+            if value:
+                self.response = instance.text
+
+        def on_response(self, instance, value):
+            self.selected.text = "Opción seleccionada: " + value
+
+        def update_focus(self, instance, value):
+            if instance.active:
+                self.response = instance.text
 
     class MDButtonNext(MDButton):
         def __init__(self, *args, **kwargs):
@@ -115,7 +163,7 @@ class PreguntasScreen(Screen):
         def on_release(self):
             screen = App.get_running_app().root.current_screen
             with open(f'respuestas/temp.tsv','+a') as file:
-                file.write(f'\t{screen.ids.response.children[0].input.text}')
+                file.write(f'\t{screen.ids.response.children[0].response}')
             screen.index += 1
 
     class MDButtonFinish(MDButtonNext):
@@ -132,7 +180,7 @@ class PreguntasScreen(Screen):
         def on_release(self):
             screen = App.get_running_app().root.current_screen
             with open(f'respuestas/temp.tsv','+a') as file:
-                file.write(f'\t{screen.ids.response.children[0].input.text}')
+                file.write(f'\t{screen.ids.response.children[0].response}')
             App.get_running_app().root.current = App.get_running_app().user_type
             MDDialog(
                 MDDialogIcon(
@@ -142,3 +190,44 @@ class PreguntasScreen(Screen):
                     text='Registrado correctamente'
                 )
             ).open()
+
+class CheckItem(MDBoxLayout):
+    text = StringProperty()
+    group = StringProperty('group')
+    active = BooleanProperty(False)
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # self.adaptive_height = True
+        # input = MDCheckbox(group=self.group)
+        # input.bind(active=self.update_active)
+        # self.add_widget(
+        #     MDAnchorLayout(input)
+        #     )
+        # self.add_widget(
+        #     MDBoxLayout(
+        #         MDLabel(text=self.text)
+        #     ))
+    # def update_active(self, instance, value):
+    #     self.active = value
+
+class CheckOther(CheckItem):
+    focus = BooleanProperty(False)
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.remove_widget(self.children[1])
+        # input = MDTextField(
+        #     MDTextFieldHintText(text='Otro:')
+        # )
+        # input.bind(
+        #     text=self.update_text,
+        #     focus=self.update_focus
+        #     )
+        # self.add_widget(input, index=1)
+
+    # def update_text(self, instance, value):
+    #     self.text = value
+
+    # def update_focus(self, instance, value):
+    #     self.focus = value
