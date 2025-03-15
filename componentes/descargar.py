@@ -1,7 +1,8 @@
 from kivy.properties import (
     StringProperty, 
     ObjectProperty,
-    ListProperty
+    ListProperty,
+    BooleanProperty
 )
 from kivymd.uix.card import MDCard
 from kivy.uix.screenmanager import Screen
@@ -35,10 +36,8 @@ class RListItem(MDCard):
     def save(self):
         app = App.get_running_app()
         screen = app.root.current_screen
-        screen.comp_password = MDTextField(
-            text=self.password if app.user._id==self.user else None,
-            disabled=app.user._id==self.user
-            )
+        screen.comp_password=self.password if app.user._id==self.user else ''
+        screen.comp_password_disabled=app.user._id==self.user
         MDDialog(
             MDDialogIcon(
                 icon='file-document-plus-outline'
@@ -50,7 +49,10 @@ class RListItem(MDCard):
                 text= f"Al confirmar, se descargará un formulario con id {self.formId}.\nIngrese la contraseña de descarga:"
             ),
             MDDialogContentContainer(
-                screen.comp_password,
+                MDTextField(
+                    text=screen.comp_password,
+                    disabled=screen.comp_password_disabled
+                ),
                 MDIconButton(
                     icon='content-copy',
                     on_release=lambda x:Clipboard.copy(self.password if app.user._id==self.user else None),
@@ -70,7 +72,7 @@ class RListItem(MDCard):
     def download(self, obj):
         obj.parent.parent.parent.parent.dismiss()
         screen = App.get_running_app().root.current_screen
-        if screen.comp_password.text == self.password:
+        if screen.comp_password == self.password:
             try:
                 with open('encuestas/'+self.formId+'.json','w') as f:
                     dump({
@@ -94,11 +96,12 @@ class RListItem(MDCard):
                 text=supText
             )
         ).open()
-        screen.comp_password = None
+        screen.comp_password = ''
         
 
 class DescargarScreen(Screen):
-    comp_password = ObjectProperty()
+    comp_password = StringProperty()
+    comp_password_enabled = BooleanProperty()
 
     def on_enter(self):
         self.ids.rv.data = get_forms()
