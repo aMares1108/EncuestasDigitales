@@ -156,7 +156,7 @@ class PreguntasScreen(Screen):
     class MultiRadioQuestion(MDBoxLayout):
         options = ListProperty()
         def _listtostr(self):
-            return ",".join(map(str,[x for x in self.options]))# if x is not None]))
+            return ",".join(map(str,[x for x in self.options if x is not None]))
         response = AliasProperty(_listtostr, bind=['options'])
 
         def __init__(self, *args, **kwargs):
@@ -172,12 +172,14 @@ class PreguntasScreen(Screen):
                     checkbox = CheckItem(text=arg['value'])
                     checkbox.bind(active=self.update_response)
                     checkbox.index = len(self.options)
+                    checkbox.group = str(checkbox.index)
                     self.options.append(None)
                     self.add_widget(checkbox)
                 elif 'isOther' in arg:
                     if arg['isOther']:
                         checkbox = CheckOther()
                         checkbox.index = len(self.options)
+                        checkbox.group = str(checkbox.index)
                         self.options.append(None)
                         checkbox.bind(
                             active=self.update_response,
@@ -208,7 +210,7 @@ class PreguntasScreen(Screen):
         
         def on_release(self):
             screen = App.get_running_app().root.current_screen
-            with open(f'respuestas/temp.tsv','+a') as file:
+            with open(f'respuestas/temp.tsv','+a', encoding="utf-8") as file:
                 file.write(f'\t{screen.ids.response.children[0].response}')
             screen.index += 1
 
@@ -225,12 +227,12 @@ class PreguntasScreen(Screen):
         
         def on_release(self):
             screen = App.get_running_app().root.current_screen
-            with open(f'respuestas/temp.tsv','+a') as file:
+            with open(f'respuestas/temp.tsv','+a', encoding="utf-8") as file:
                 file.write(f'\t{screen.ids.response.children[0].response}')
-            with open(f'respuestas/temp.tsv','r') as file:
+            with open(f'respuestas/temp.tsv','r', encoding="utf-8") as file:
                 content = file.read()
-            with open(f'respuestas/{screen.form_id}.tsv','+a') as file:
-                file.write(f'{screen.ids.response.children[0].response}\n')
+            with open(f'respuestas/{screen.form_id}.tsv','+a', encoding="utf-8") as file:
+                file.write(f'{content}\n')
             
             App.get_running_app().root.current = App.get_running_app().user_type
             MDDialog(
