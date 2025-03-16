@@ -1,57 +1,68 @@
 <GenerarScreen>:
     MDBoxLayout:        
         md_bg_color: self.theme_cls.backgroundColor
-    
-    MDScreen:
+
+    MDBoxLayout:
         md_bg_color: self.theme_cls.secondaryContainerColor
+        orientation: 'vertical'
 
         MDTopAppBar:
             type: "small"   
             size_hint_x: 1
-            pos_hint: {"center_x": .5, "center_y": .97}
 
             MDTopAppBarLeadingButtonContainer:
 
                 MDActionTopAppBarButton:
                     icon: "menu"
+                    on_press:
+                        root.manager.current = app.user_type
 
             MDTopAppBarTitle:
-                text: "Inicio"
+                text: "Mis registros"
             
-    MDBoxLayout:        
+        MDRecycleView:
+            id: rv
+            viewclass: 'GListItem'
+            RecycleBoxLayout:
+                spacing: dp(5)
+                padding: 10
+                default_size_hint: 1, None 
+                size_hint_y: None 
+                height: self.minimum_height 
+                orientation: 'vertical' 
+
+<GListItem>:
+    orientation: 'horizontal'
+    style: 'outlined'
+    on_release: root.save()
+    user_id: str(app.user._id)
+    MDIcon:
+        icon: "form-select"                
+        size_hint: None, None
+        pos_hint: {"center_y": 0.5}
+
+    MDBoxLayout:
         orientation: 'vertical'
-        padding: [50, 90]
-        spacing: 20
-        pos_hint: {"center_x": .5, "center_y": .97}
-
-        MDTextField:
-            id: input_email
-            pos_hint: {"center_x": 0.5, "center_y": 0.5}            
-            line_color_focus: 0,0,0,1
-
-            MDTextFieldHintText:
-                text: "Ingrese url del formulario"
+        MDLabel:
+            text: root.info[0]
+            theme_text_color: 'Primary'
+            text_size: root.width, None
+            size: self.texture_size
+            shorten: True
             
-        MDTextField:
-            id: input_password
-            pos_hint: {"center_x": 0.5, "center_y": 0.52}            
-            line_color_focus: 0,0,0,1
-            password: True          
-
-            MDTextFieldHintText:     
-                text: "Ingrese contraseña para el formulario"        
-
-
-        MDBoxLayout:
-            size_hint_y: None
-            orientation: 'horizontal'
-            spacing: 15     
-            pos_hint: {"center_x": 0.5, "center_y": 1}
-
-            MDButton:
-                on_press: 
-                    root.manager.current = 'principal'                
-                    root.manager.transition.direction = "left"  
-                
-                MDButtonText:
-                    text: "Generar"        
+        MDLabel:
+            role: 'small'
+            text: root.form_id
+            theme_text_color: 'Primary'
+            text_size: root.width, None
+            size: self.texture_size
+            shorten: True
+            
+        MDLabel:
+            role: 'small'
+            text: f'{root.info[1]} respuestas'
+            theme_text_color: 'Primary'
+            text_size: root.width, None
+            size: self.texture_size
+            shorten: True
+        
