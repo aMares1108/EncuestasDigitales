@@ -17,6 +17,7 @@ from kivy.properties import (
 from kivy.app import App
 
 from json import load
+from os import path
 
 class PreguntasScreen(Screen):
     index = NumericProperty(-1)
@@ -227,11 +228,17 @@ class PreguntasScreen(Screen):
         
         def on_release(self):
             screen = App.get_running_app().root.current_screen
-            with open(f'respuestas/temp.tsv','+a', encoding="utf-8") as file:
+            with open(f'respuestas/temp.tsv','a', encoding="utf-8") as file:
                 file.write(f'\t{screen.ids.response.children[0].response}')
             with open(f'respuestas/temp.tsv','r', encoding="utf-8") as file:
                 content = file.read()
-            with open(f'respuestas/{screen.form_id}.tsv','+a', encoding="utf-8") as file:
+            if not path.exists(f'respuestas/{screen.form_id}.tsv'):
+                with open(f'respuestas/{screen.form_id}.tsv','w', encoding="utf-8") as file:
+                    for section in self.json_data['sections']:
+                        for question in section['questions']:
+                            file.write(f'{question['question']}\t')
+                    file.write('\n')
+            with open(f'respuestas/{screen.form_id}.tsv','a', encoding="utf-8") as file:
                 file.write(f'{content}\n')
             
             App.get_running_app().root.current = App.get_running_app().user_type
