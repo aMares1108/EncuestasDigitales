@@ -1,6 +1,7 @@
 from kivy.uix.screenmanager import Screen
 from kivymd.uix.card import MDCard
 from kivymd.uix.dialog import MDDialog, MDDialogIcon, MDDialogSupportingText, MDDialogHeadlineText
+from kivy.app import App
 from kivy.properties import StringProperty, AliasProperty
 
 import pandas as pd
@@ -11,14 +12,16 @@ from json import load
 
 class GenerarScreen(Screen):
     def on_enter(self):
-        data = list()
-        for file in listdir('respuestas'):
-            if file.endswith('.tsv') and file!='temp.tsv':
-                with open('respuestas/'+file, 'r', encoding='utf-8'):
-                    data.append({
-                        'form_id': path.splitext(file)[0]
-                    })
-        self.ids.rv.data = data
+        app = App.get_running_app()
+        if app.user_type == 'principal_reducida':
+            data = list()
+            for file in listdir('respuestas'):
+                if file.endswith('.tsv') and file!='temp.tsv':
+                    with open('respuestas/'+file, 'r', encoding='utf-8'):
+                        data.append({
+                            'form_id': path.splitext(file)[0]
+                        })
+            self.ids.rv.data = data
 
 class GListItem(MDCard):
     form_id = StringProperty()
