@@ -234,9 +234,10 @@ class PreguntasScreen(Screen):
                 content = file.read()
             if not path.exists(f'respuestas/{screen.form_id}.tsv'):
                 with open(f'respuestas/{screen.form_id}.tsv','w', encoding="utf-8") as file:
+                    file.write('Timestamp\tEstado\tApellidos\tDirección\tMunicipio\tTeléfono')
                     for section in self.json_data['sections']:
                         for question in section['questions']:
-                            file.write(f'{question['question']}\t')
+                            file.write(f'\t{question['question']}')
                     file.write('\n')
             with open(f'respuestas/{screen.form_id}.tsv','a', encoding="utf-8") as file:
                 file.write(f'{content}\n')
