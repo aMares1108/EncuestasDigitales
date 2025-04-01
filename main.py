@@ -16,6 +16,8 @@ from componentes.principal_reducida import PrincipalReducidaScreen
 from componentes.encuestas import EncuestasScreen
 from componentes.preguntas import PreguntasScreen
 
+from os import path, mkdir
+
 class EncuestaApp(App):
     user = DictProperty()
     user_type = StringProperty('login')
@@ -31,6 +33,9 @@ class EncuestaApp(App):
             self.root.current = 'login'
 
     def build(self):
+        for carpeta in ('respuestas', 'reportes', 'encuestas'):
+            if not path.isdir(carpeta):
+                mkdir(carpeta)
         self.theme_cls.theme_style = "Light"
         self.theme_cls.primary_palette = "Black"
         self.theme_cls.accent_palette = 'Blue'
@@ -51,7 +56,7 @@ class EncuestaApp(App):
     def check_complete(self):
         checked_error = any(self.root.current_screen.ids.get(input).error for input in self.root.current_screen.ids if input.startswith("input_"))
         self.root.current_screen.ids.button_enter.disabled = checked_error
-    
+
     
 if __name__ == '__main__':
     EncuestaApp().run()
