@@ -28,7 +28,8 @@ class RegisterScreen(Screen):
             }
         try:
             with MongoClient(getenv('MONGO_URI')) as mongo:
-                res = mongo.test.user.insert_one(doc)
+                db = mongo.get_database()
+                res = db.user.insert_one(doc)
         except:
             MDDialog(
                 MDDialogIcon(

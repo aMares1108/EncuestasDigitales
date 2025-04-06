@@ -25,7 +25,8 @@ class GenerarScreen(Screen):
             self.ids.rv.data = data
         elif app.user_type == 'principal':
             with MongoClient(getenv('MONGO_URI')) as mongo:
-                self.ids.rv.data = [{'form_id': form} for form in mongo.test.list_collection_names() if form not in ('alumnos', 'form', 'test', 'user')]
+                db = mongo.get_database()
+                self.ids.rv.data = [{'form_id': form} for form in db.list_collection_names() if form not in ('alumnos', 'form', 'test', 'user')]
 
 class GListItem(MDCard):
     form_id = StringProperty()
@@ -47,7 +48,8 @@ class GListItem(MDCard):
         elif app.user_type == 'principal':
             if self.form_id:
                 with MongoClient(getenv('MONGO_URI')) as mongo:
-                    collection = mongo.test[self.form_id]
+                    db = mongo.get_database()
+                    collection = db[self.form_id]
                     title = collection.find_one({}).get('title', 'Sin título')
                     cant = collection.count_documents({})
                     return (title, cant)
@@ -63,8 +65,9 @@ class GListItem(MDCard):
         elif app.user_type=='principal':
             try:
                 with MongoClient(getenv('MONGO_URI')) as mongo:
-                    headers = mongo.test[self.form_id].find_one({}).keys()
-                    documentos = mongo.test[self.form_id].find({})
+                    db = mongo.get_database()
+                    headers = db[self.form_id].find_one({}).keys()
+                    documentos = db[self.form_id].find({})
                     with open(f"reportes/{self.form_id}.tsv", "w", newline="", encoding="utf-8") as tsv_file:
                         writer = csv.writer(tsv_file, delimiter="\t")  # Especifica el delimitador como tab
                         # Escribe los encabezados (columnas)
@@ -123,7 +126,7 @@ class GListItem(MDCard):
             with MongoClient(getenv('MONGO_URI')) as mongo:
                 # if formid not in mongo.DBEncuestasDigitales.list_collection_names():
                 #     mongo.DBEncuestasDigitales.create_collection(formid)                
-                db = mongo["test"]
+                db = mongo.get_database()
                 collection = db[self.form_id]
                 res = collection.insert_many(data)
         except Exception as exc:

@@ -34,12 +34,15 @@ class LoginScreen(Screen):
     def login(self, *args):
         self.spinner = True
         self.b_enter = True
+        self.correo = self.ids.input_email.text
+        self.passwd = self.ids.input_password.text
         Thread(target=self.connect, args=(self.correo, self.passwd)).start()
 
     def connect(self, correo: str, passwd: str):
         try:
             with MongoClient(getenv('MONGO_URI')) as mongo:
-                res = mongo.test.user.find_one({
+                db = mongo.get_database()
+                res = db.user.find_one({
                     'email': correo
                 })
             

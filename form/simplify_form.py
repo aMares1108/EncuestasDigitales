@@ -18,8 +18,8 @@ def save_simplify_form(form_id: str, passwd: str, user_id: ObjectId):
     doc['password'] = passwd if passwd else urandom(3).hex()
     doc['user'] = user_id
     with MongoClient(getenv('MONGO_URI')) as mongo:
-        mongo.test.form.insert
-        res = mongo.test.form.insert_one(doc)
+        # mongo.test.form.insert
+        res = mongo.get_database().form.insert_one(doc)
     return res
 
 def simplify(api_res: dict|str):

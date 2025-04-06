@@ -22,5 +22,5 @@ def register_user(doc: dict):
         raise EmailNotValidError()
     doc['password'] = hashpw(str(doc['password']).encode('utf-8'), gensalt())
     with MongoClient(getenv('MONGO_URI')) as mongo:
-        res = mongo.test.user.insert_one(doc)
+        res = mongo.get_database().user.insert_one(doc)
     return str(res.inserted_id) if res.acknowledged else None
