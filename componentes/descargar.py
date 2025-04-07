@@ -2,7 +2,8 @@ from kivy.properties import (
     StringProperty, 
     ObjectProperty,
     ListProperty,
-    BooleanProperty
+    BooleanProperty,
+    AliasProperty
 )
 from kivymd.uix.card import MDCard
 from kivy.uix.screenmanager import Screen
@@ -25,10 +26,23 @@ from kivymd.uix.textfield import MDTextField
 from kivy.core.clipboard import Clipboard
 from form.retrieve import get_forms
 from json import dump
+from bson import ObjectId
 
 class RListItem(MDCard):
     title = StringProperty()
-    formId = StringProperty()
+    description = StringProperty()
+    _id = ObjectProperty()
+    def _formId_to_creationDate(self):
+        # try:
+        #     oid = ObjectId(self._id)
+        #     return oid.generation_time.strftime('%d-%b-%Y')
+        # except:
+        #     return self.formId
+        if self._id is not None:
+            return self._id.generation_time.strftime('%d-%b-%Y')
+        else:
+            return 'Unkown date'
+    date = AliasProperty(_formId_to_creationDate, bind=['_id'])
     password = StringProperty()
     user = ObjectProperty()
     sections = ListProperty()

@@ -51,25 +51,40 @@
     orientation: 'horizontal'
     style: 'outlined'
     on_release: root.save()
-    MDIcon:
-        icon: "form-select"                
-        size_hint: None, None
-        pos_hint: {"center_y": 0.5}
+    adaptive_height: True
+    MDAnchorLayout:
+        size_hint_x: None
+        MDIcon:
+            icon: "form-select"                
+            size_hint: None, None
+            pos_hint: {"center_y": 0.5}
 
     MDBoxLayout:
         orientation: 'vertical'
+        adaptive_height: True
         MDLabel:
             text: root.title
             theme_text_color: 'Primary'
             text_size: root.width, None
+            size_hint_y: None
             size: self.texture_size
+            max_lines: 2
+            
+        MDLabel:
+            role: 'medium'
+            text: root.description
+            theme_text_color: 'Custom'
+            text_color: [0,0,0,0.8]
+            size_hint_y: None
+            height: self.texture_size[1]
             max_lines: 3
             
         MDLabel:
             role: 'small'
-            text: root.formId
+            text: root.date
             theme_text_color: 'Primary'
             text_size: root.width, None
             size: self.texture_size
+            size_hint_y: None
             shorten: True
         
