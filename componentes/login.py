@@ -22,14 +22,15 @@ class LoginException(Exception):
         return super().__init__(*args)
 
 class LoginScreen(Screen):
-    correo = StringProperty() # void en producción
-    passwd = StringProperty() # void en producción
+    correo = StringProperty('chuisangel8@gmail.co') # void en producción
+    passwd = StringProperty('*Revolutio1108*') # void en producción
     spinner = BooleanProperty(False)
     b_enter = BooleanProperty(True)
 
     def __init__(self, **kw):
         self.queue = Queue()
         super().__init__(**kw)
+        self.login()
 
     def login(self, *args):
         self.spinner = True

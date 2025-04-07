@@ -5,6 +5,7 @@ from kivy.app import App
 from kivy.properties import StringProperty, AliasProperty
 
 import pandas as pd
+from datetime import datetime
 from pymongo import MongoClient
 
 from os import listdir, path, getenv
@@ -51,7 +52,7 @@ class GListItem(MDCard):
                     db = mongo.get_database()
                     collection = db[self.form_id]
                     title = collection.find_one({}).get('title', 'Sin título')
-                    cant = collection.count_documents({})
+                    cant = len(next(iter(collection.find_one().get('responses', [dict()]).values())))
                     return (title, cant)
         return ('',0)
     info = AliasProperty(_get_form_title, bind=['form_id'])
@@ -66,18 +67,21 @@ class GListItem(MDCard):
             try:
                 with MongoClient(getenv('MONGO_URI')) as mongo:
                     db = mongo.get_database()
-                    headers = db[self.form_id].find_one({}).keys()
-                    documentos = db[self.form_id].find({})
+                    doc = db[self.form_id].find_one({})
+                    headers_gen = doc.keys()
+                    headers_questions = doc['responses'].keys()
                     with open(f"reportes/{self.form_id}.tsv", "w", newline="", encoding="utf-8") as tsv_file:
                         writer = csv.writer(tsv_file, delimiter="\t")  # Especifica el delimitador como tab
                         # Escribe los encabezados (columnas)
                         
-                        writer.writerow(headers)
+                        writer.writerow([*headers_gen, *headers_questions])
 
                         # Escribe los datos (filas)
-                        for documento in documentos:
-                            fila = list(documento.values())
-                            writer.writerow(fila)
+                        # for documento in documentos:
+                        subdict = doc.pop('responses')
+                        common = doc
+                        list_of_dicts = [dict(zip(subdict.keys(), values)) for values in zip(*subdict.values())]
+                        writer.writerows([[*common.values(), *d.values()] for d in list_of_dicts])
             except Exception as exc:
                 MDDialog(
                     MDDialogIcon(
@@ -111,14 +115,14 @@ class GListItem(MDCard):
         file_path = f"respuestas/{self.form_id}.tsv"
         df = pd.read_csv(file_path, sep='\t')
 
-        responses = df.to_dict('records')
-        responses = [{
-            **response,
-            'user_id':self.user_id,
-            'title': self.info[0]
-        } for response in responses]
+        responses = df.to_dict(orient='list')
 
-        return responses
+        return {
+            'form_id': self.form_id,
+            'user_id': self.user_id,
+            'date': datetime.now(),
+            'responses': responses
+        }
 
 
     def insert_data_to_mongo(self, data):
@@ -128,7 +132,7 @@ class GListItem(MDCard):
                 #     mongo.DBEncuestasDigitales.create_collection(formid)                
                 db = mongo.get_database()
                 collection = db[self.form_id]
-                res = collection.insert_many(data)
+                res = collection.insert_one(data)
         except Exception as exc:
             MDDialog(
                 MDDialogIcon(
