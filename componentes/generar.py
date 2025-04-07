@@ -51,8 +51,8 @@ class GListItem(MDCard):
                 with MongoClient(getenv('MONGO_URI')) as mongo:
                     db = mongo.get_database()
                     collection = db[self.form_id]
-                    title = collection.find_one({}).get('title', 'Sin título')
                     cant = len(next(iter(collection.find_one().get('responses', [dict()]).values())))
+                    title = db.form.find_one({'formId': self.form_id})
                     return (title, cant)
         return ('',0)
     info = AliasProperty(_get_form_title, bind=['form_id'])
